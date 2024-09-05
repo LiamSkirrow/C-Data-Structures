@@ -14,12 +14,15 @@ struct node{
 struct list{
     Node *head;
     Node *tail;
-    Node *walker;
     unsigned int size;
 };
 
+// list operations
 List *newList(void);
-void addNode(List *l, char value);
 void rmList(List *l);
+// node operations
+void addNode(List *l, char value);
+void rmNode(List *l, int index);  // not implemented yet
+void mvNode(List *l, int from, int to); // not implemented yet
 
 #endif

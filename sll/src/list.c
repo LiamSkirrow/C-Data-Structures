@@ -13,7 +13,6 @@ List *newList(void){
     l->size = 0;
     l->head   = NULL;
     l->tail   = NULL;
-    l->walker = NULL;
 
     return l;
 }
@@ -43,15 +42,62 @@ void addNode(List *l, char value){
     l->size++;
 }
 
-// remove the final node from the list
+// NOTE: arg index starts from zero (ie: index = 0, means Node head)
+// remove the node at location index in the list
+void rmNode(List *l, int index){
+    Node *tmp = l->head;
+    Node *prev;
+
+    if(tmp == NULL)
+        return;
+    if(index > l->size)
+        return;
+
+    else if(index == 0){
+        // remove head
+        if(l->size == 1){
+            l->head = NULL;
+            l->tail = NULL;
+            free(tmp);
+        }
+        else{
+            l->head = l->head->next;
+            free(tmp);
+        }
+    }
+    else if(index == l->size){
+        // remove tail
+        for(int i = 0; i < index-1; i++){
+            tmp = tmp->next;
+        }
+        
+    }
+    else{
+        // rm node at index
+        for(int i = 0; i < index-1; i++){
+            tmp = tmp->next;
+        }
+        prev = tmp;
+        tmp = tmp->next;
+        if(tmp->next == NULL)
+            prev->next = NULL;
+        else
+            prev->next = tmp->next;
+
+        free(tmp);
+    }
+    l->size--;
+}
+
+// free the list and all nodes therein
 void rmList(List *l){
     Node *tmpNodeFront;
     Node *tmpNodeBack;
-    int i = 0, size;
+    int size;
 
     if(l->size > 0){
         tmpNodeFront = l->head;
-        for(i = 0; tmpNodeFront->next != NULL; i++){
+        for(int i = 0; tmpNodeFront->next != NULL; i++){
             // save current node
             tmpNodeBack = tmpNodeFront;
             // advance to next node
@@ -60,12 +106,9 @@ void rmList(List *l){
             free(tmpNodeBack);
         }
         // delete last remaining node
-        free(tmpNodeFront); i++;
+        free(tmpNodeFront);
         // delete the list itself!
         size = l->size;
         free(l);
-        
-        // did we delete all the nodes?
-        printf("Stored size: %d\nMeasured size: %d\n", size, i);
     }
 }
